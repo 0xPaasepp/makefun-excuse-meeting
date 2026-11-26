@@ -1,23 +1,34 @@
-#!/usr/bin/env python3
-# Excuse entry: one line for skipping a pointless meeting, to /output/entry.txt.
-# Pure standard library. The gate wants 1-200 characters, a single line.
-# The joke: skipping a meeting because you are stuck in a meeting about
-# why there are too many meetings — the excuse eats its own tail.
+#!/usr/bin/python3
+"""A meeting-skipping excuse, in one line.
+
+The excuse folds in on itself: stuck in a meeting about why there
+are too many meetings, and that meeting is running over. The line
+is the whole joke, no setup required.
+"""
 
 from pathlib import Path
 
-LINE = "Sorry, I can't make it — I'm stuck in a meeting about why we have too many meetings, and it's running over."
-TARGET = Path("/output/entry.txt")
+
+def wording():
+    apology = "Sorry, I can't make it"
+    trap = "I'm stuck in a meeting about why we have too many meetings"
+    tail = "and it's running over."
+    return apology + " \u2014 " + trap + ", " + tail
 
 
-def run() -> None:
-    text = LINE.strip()
-    assert 0 < len(text) <= 200, "entry must be 1-200 characters"
-    assert "\n" not in text and "\r" not in text, "entry must be one line"
-    TARGET.parent.mkdir(parents=True, exist_ok=True)
-    TARGET.write_text(text, encoding="utf-8")
-    print(text)
+def publish(line):
+    line = line.strip()
+    length = len(line)
+    if length == 0 or length > 200:
+        raise SystemExit("entry must be 1-200 characters")
+    for bad in ("\n", "\r"):
+        if bad in line:
+            raise SystemExit("entry must be one line")
+    path = Path("/output") / "entry.txt"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(line.encode("utf-8"))
+    print(line)
 
 
 if __name__ == "__main__":
-    run()
+    publish(wording())
