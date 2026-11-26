@@ -13,7 +13,7 @@ def wording():
     apology = "Sorry, I can't make it"
     trap = "I'm stuck in a meeting about why we have too many meetings"
     tail = "and it's running over."
-    return apology + " \u2014 " + trap + ", " + tail
+    return " \u2014 ".join([apology, trap]) + ", " + tail
 
 
 def publish(line):
